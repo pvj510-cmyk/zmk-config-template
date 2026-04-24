@@ -12,10 +12,8 @@ jobs:
         with:
           board: nice_nano_v2
           shield: felix_left
-          config_path: config  # 이 줄을 추가하세요!
       - name: Build Right
         uses: zmkfirmware/zmk-build-action@v1
         with:
           board: nice_nano_v2
           shield: felix_right
-          config_path: config  # 이 줄을 추가하세요!
