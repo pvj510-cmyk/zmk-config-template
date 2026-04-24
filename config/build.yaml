@@ -1,6 +1,5 @@
-# config/build.yaml
 builds:
   - board: nice_nano_v2
-    shield: felixkeeb_left
+    shield: felix_left nice_view_adapter
   - board: nice_nano_v2
-    shield: felixkeeb_right
+    shield: felix_right nice_view_adapter
