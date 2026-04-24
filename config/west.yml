@@ -12,5 +12,5 @@ manifest:
     - name: felixkeeb
       remote: beekeeb
       revision: main
-  self:
-    path: config
+self:
+  path: .
