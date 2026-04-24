@@ -8,17 +8,43 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install West and Dependencies
-        run: |
-          pip install west
-          west init -l config
-          west update
+      - name: Cache west modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            modules/
+            tools/
+            zephyr/
+            bootloader/
+            zmk/
+          key: ${{ runner.os }}-build-${{ hashFiles('config/west.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
 
-      - name: Build Left
-        run: west build -s zmk/app -b nice_nano_v2 -- -DSHIELD="felix_left nice_view_adapter"
+      - name: West Init
+        uses: zmkfirmware/zmk-west-action@v1
+        with:
+          args: init "-l config"
 
-      - name: Build Right
-        run: west build -s zmk/app -b nice_nano_v2 -- -DSHIELD="felix_right nice_view_adapter"
+      - name: West Update
+        uses: zmkfirmware/zmk-west-action@v1
+        with:
+          args: update
+
+      - name: West Zephyr export
+        uses: zmkfirmware/zmk-west-action@v1
+        with:
+          args: zephyr-export
+
+      - name: West Build (Left)
+        uses: zmkfirmware/zmk-west-action@v1
+        with:
+          args: build -s zmk/app -b nice_nano_v2 -- -DSHIELD="felix_left nice_view_adapter"
+
+      - name: West Build (Right)
+        uses: zmkfirmware/zmk-west-action@v1
+        with:
+          args: build -s zmk/app -b nice_nano_v2 -- -DSHIELD="felix_right nice_view_adapter"
 
       - name: Archive firmware
         uses: actions/upload-artifact@v4
