@@ -1,20 +1,22 @@
+name: Build FelixKeeb
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Build
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build
+
+      - name: Build ZMK
         uses: zmkfirmware/zmk-build-action@v2
         with:
           board: nice_nano_v2
           shield: felix_left felix_right
           config_path: config
+
       - name: Archive firmware
         uses: actions/upload-artifact@v4
         with:
           name: firmware
-          path: build/zephyr/zmk.uf2
+          path: build/zephyr/*.uf2
