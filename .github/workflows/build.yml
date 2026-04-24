@@ -7,13 +7,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          pip install west
+          west init -l config
+          west update
+
       - name: Build Left
-        uses: zmkfirmware/zmk-build-action@v1
-        with:
-          board: nice_nano_v2
-          shield: felix_left
+        run: west build -s zmk/app -b nice_nano_v2 -- -DSHIELD="felix_left"
+
       - name: Build Right
-        uses: zmkfirmware/zmk-build-action@v1
+        run: west build -s zmk/app -b nice_nano_v2 -- -DSHIELD="felix_right"
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          board: nice_nano_v2
-          shield: felix_right
+          name: firmware
+          path: build/zephyr/*.uf2
